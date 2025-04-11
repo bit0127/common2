@@ -1,0 +1,24 @@
+{
+  "version": "2.0",
+  "app_name": "movie-api",
+"stages": {
+    "dev": {
+      "tag":{
+        "Environemnt": "dev",
+        "SystemName": "personal-use",
+        "Owner": "dash"
+      },
+      "manage_iam_role": false,
+      "iam_role_arn": "arn:aws:iam::626635412172:role/lambda-execute-role",
+      "environment_variables":{
+        "SLACKAPP_SECRET_NAME":"",
+        "EC2_REGION": "",
+        "SECRET_REGION": "",
+        "JWT_SECRET_KEY": "afecbc4633dd0ec41741a77b36ca4e3dea0516de3e629b67bf4923ec6d52ca2e"
+      }
+    },
+    "prod": {
+      
+    }
+  }
+}
