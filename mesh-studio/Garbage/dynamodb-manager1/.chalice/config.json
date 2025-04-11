@@ -1,0 +1,33 @@
+{
+  "version": "2.0",
+  "app_name": "dynamodb-manager",
+"stages": {
+    "dev": {
+      "tag":{
+        "Environemnt": "dev",
+        "SystemName": "personal-use",
+        "Owner": "dash"
+      },
+      "manage_iam_role": false,
+      "iam_role_arn": "arn:aws:iam::626635412172:role/lambda-execute-role",
+      "environment_variables":{
+        "EC2_REGION": "",
+        "SECRET_REGION": ""
+      }
+    },
+    "prod": {
+      "tag":{
+        "Environemnt": "prod",
+        "SystemName": "personal-use",
+        "Owner": "dash"
+      },
+      "manage_iam_role": false,
+      "iam_role_arn": "write-your-iam_role-arn",
+      "environment_variables":{
+        "EC2_REGION": "",
+        "SECRET_REGION": ""
+      }
+      
+    }
+  }
+}

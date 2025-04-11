@@ -1,0 +1,307 @@
+openapi: "3.0.1"
+info:
+  title: "task-manager-api"
+  version: "1.0"
+servers:
+- url: "https://6xzlu92qs2.execute-api.ap-northeast-1.amazonaws.com/{basePath}"
+  variables:
+    basePath:
+      default: "api"
+paths:
+  /login:
+    post:
+      summary: User Login
+      description: Authenticates a user and returns a JWT token.
+      requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    format: email
+                    example: "user@example.com"
+                  password:
+                    type: string
+                    format: password
+                    example: "securepassword"
+      responses:
+        "200":
+          description: "Login successful"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIs..."
+        "401":
+          description: Invalid user or wrong password
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:<YOUR-AWS-ID>:function:task-manager-api-dev/invocations"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        contentHandling: "CONVERT_TO_TEXT"
+  /tasks/{task_id}:
+    get:
+      summary: "Retrieve a task by its ID"
+      description: "This endpoint retrieves the details of a task using its unique task ID. The request must include a valid Authorization token in the header."
+      parameters:
+        - name: "task_id"
+          in: "path"
+          required: true
+          description: "The ID of the task to retrieve."
+          schema:
+            type: "string"
+        - name: "Authorization"
+          in: "header"
+          required: true
+          description: "Bearer token for authorization."
+          schema:
+            type: string
+            example: "Bearer <token>"
+      responses:
+        '200':
+          description: "Task details retrieved successfully."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task_id:
+                    type: string
+                  user_id:
+                    type: string
+                  title:
+                    type: string
+                  description:
+                    type: string
+                  deadline:
+                    type: string
+                  priority:
+                    type: string
+                  status:
+                    type: string
+        '400':
+          description: "BadRequestError"
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:<YOUR-AWS-ID>:function:task-manager-api-dev/invocations"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        contentHandling: "CONVERT_TO_TEXT"
+    put:
+      summary: "Update an existing task"
+      description: "This endpoint updates the details of an existing task using its task ID. The request must include a valid Authorization token and the task ID in the URL."
+      parameters:
+        - name: "task_id"
+          in: "path"
+          required: true
+          description: "The ID of the task to update."
+          schema:
+            type: "string"
+        - name: "Authorization"
+          in: "header"
+          required: true
+          description: "Bearer token for authorization."
+          schema:
+            type: string
+            example: "Bearer <token>"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                deadline:
+                  type: string
+                priority:
+                  type: string
+                status:
+                  type: string
+      responses:
+        '200':
+          description: "Task updated successfully."
+        '400':
+          description: "Bad request. Missing required fields or invalid data."
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:<YOUR-AWS-ID>:function:task-manager-api-dev/invocations"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        contentHandling: "CONVERT_TO_TEXT"
+    delete:
+      summary: "Delete a task by its ID"
+      description: "This endpoint deletes a task using its unique task ID. The request must include a valid Authorization token in the header."
+      parameters:
+      - name: "task_id"
+        in: "path"
+        required: true
+        description: "The ID of the task to delete."
+        schema:
+          type: "string"
+      - name: "Authorization"
+        in: "header"
+        required: true
+        description: "Bearer token for authorization."
+        schema:
+          type: string
+          example: "Bearer <token>"
+      responses:
+        "200":
+          description: "Task with ID {task_id} deleted successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Success message"
+                  task_id:
+                    type: string
+                    description: "The task ID"
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:<YOUR-AWS-ID>:function:task-manager-api-dev/invocations"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        contentHandling: "CONVERT_TO_TEXT"
+  /tasks:
+    post:
+      summary: "Create a new task"
+      description: "This endpoint creates a new task for a user, requiring authorization and task details in the body."
+      parameters:
+        - name: "Authorization"
+          in: "header"
+          required: true
+          description: "Bearer token for authorization."
+          schema:
+            type: string
+            example: "Bearer <token>"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: "The title of the task."
+                description:
+                  type: string
+                  description: "A description of the task."
+                deadline:
+                  type: string
+                  format: date-time
+                  description: "The deadline for the task."
+                priority:
+                  type: string
+                  description: "The priority of the task (e.g., low, medium, high)."
+                status:
+                  type: string
+                  description: "The current status of the task (e.g., pending, completed)."
+              required:
+                - title
+                - description
+                - deadline
+                - priority
+                - status
+      responses:
+        '200':
+          description: "Task created successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Success message"
+                  task_id:
+                    type: string
+                    description: "The unique ID of the created task."
+        '400':
+          description: "BadRequestError"
+        '500':
+          description: "Internal server error."
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:<YOUR-AWS-ID>:function:task-manager-api-dev/invocations"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        contentHandling: "CONVERT_TO_TEXT"
+  /register:
+    post:
+      summary: "Register a new user"
+      description: "This endpoint registers a new user with email and password."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: "The user's email address."
+                password:
+                  type: string
+                  format: password
+                  description: "The user's password."
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: "User registered successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: "Success message"
+                  user_id:
+                    type: string
+                    description: "The unique ID of the registered user."
+        '400':
+          description: "BadRequestError. Email and password are required."
+        '500':
+          description: "Internal server error."
+      x-amazon-apigateway-integration:
+        type: "aws_proxy"
+        httpMethod: "POST"
+        uri: "arn:aws:apigateway:ap-northeast-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-northeast-1:<YOUR-AWS-ID>:function:task-manager-api-dev/invocations"
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        contentHandling: "CONVERT_TO_TEXT"

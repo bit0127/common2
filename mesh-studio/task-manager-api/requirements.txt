@@ -1,0 +1,8 @@
+pyjwt
+boto3
+bcrypt
+passlib
+pylint 
+black 
+# moto
+# pytest

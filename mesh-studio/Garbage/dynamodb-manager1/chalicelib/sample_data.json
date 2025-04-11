@@ -1,0 +1,40 @@
+{
+    "users": [
+      {
+        "user_id": "user-001",
+        "email": "user-001@example.com",
+        "password_hash": "password_1"
+      },
+      {
+        "user_id": "user-002",
+        "email": "user-002@example.com",
+        "password_hash": "password_2"
+      },
+        {
+            "user_id": "user-003",
+            "email": "user-003@example.com",
+            "password_hash": "password_3"
+        }
+    ],
+    "tasks": [
+      {
+        "task_id": "task-001",
+        "title": "Design API structure",
+        "description": "Plan the REST API endpoints",
+        "due_date": "2025-02-20T12:00:00Z",
+        "priority": 1,
+        "status": "pending",
+        "assigned_users": ["user-001"]
+      },
+      {
+        "task_id": "task-002",
+        "title": "Implement User Authentication",
+        "description": "Develop user registration and login",
+        "due_date": "2025-02-22T18:00:00Z",
+        "priority": 2,
+        "status": "in_progress",
+        "assigned_users": ["user-002"]
+      }
+    ]
+  }
+  
